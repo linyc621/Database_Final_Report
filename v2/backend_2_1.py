@@ -206,7 +206,8 @@ def get_smart_recommendation():
                 COUNT(ri.ingredient_id) AS emergency_count
             FROM pantry.recipes r
             JOIN pantry.recipe_ingredients ri ON r.id = ri.recipe_id
-            JOIN expiring_items ei ON ri.ingredient_id = ei.ingredient_id
+            JOIN expiring_items ei
+             ON ri.ingredient_id = ei.ingredient_id
             GROUP BY r.id, r.name, r.description
             ORDER BY emergency_count DESC;
         """
