@@ -45,8 +45,6 @@ class FridgeItemUpdate(BaseModel):
     unit: str
     expire_date: date
 
-# 3. API 接口區域 (CRUD + 演算法)
-# 讀取 (Read)
 @app.get("/api/inventory", summary="取得冰箱所有食材")
 def get_inventory():
     conn = get_db_connection()
@@ -58,7 +56,12 @@ def get_inventory():
             ingredients.category,
             fridge_contents.quantity, 
             fridge_contents.unit, 
-            fridge_contents.expire_date 
+            fridge_contents.expire_date,
+            CASE 
+                WHEN expire_date <= CURRENT_DATE + INTERVAL '3 days' THEN 'red'
+                WHEN expire_date <= CURRENT_DATE + INTERVAL '5 days' THEN 'yellow'
+                ELSE 'green'
+            END AS status
         FROM pantry.fridge_contents
         JOIN pantry.ingredients ON fridge_contents.ingredient_id = ingredients.id
         ORDER BY fridge_contents.expire_date ASC;
@@ -216,6 +219,36 @@ def get_smart_recommendation():
         cur.close()
         conn.close()
 
+@app.get("/api/recipes/match", summary="食譜匹配度：計算每道食譜能做幾%")
+def get_recipe_match():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        query = """
+            SELECT
+                r.id AS recipe_id,
+                r.name AS recipe_name,
+                COUNT(ri.ingredient_id) AS total_needed,
+                COUNT(fc.ingredient_id) AS have_count,
+                ROUND(
+                    COUNT(fc.ingredient_id) * 100.0 / COUNT(ri.ingredient_id), 1
+                ) AS match_percent
+            FROM pantry.recipes r
+            JOIN pantry.recipe_ingredients ri ON r.id = ri.recipe_id
+            LEFT JOIN (
+                SELECT DISTINCT ingredient_id FROM pantry.fridge_contents
+            ) fc ON ri.ingredient_id = fc.ingredient_id
+            GROUP BY r.id, r.name
+            ORDER BY match_percent DESC;
+        """
+        cur.execute(query)
+        results = cur.fetchall()
+        return {"status": "success", "data": results}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"匹配失敗: {e}")
+    finally:
+        cur.close()
+        conn.close()
 # 原有的基本食譜查詢
 @app.get("/api/recipes/recommend", summary="取得所有食譜清單")
 def get_all_recipes():
@@ -242,6 +275,38 @@ def get_all_recipes():
             "item": row['ingredient_name'], "qty": row['quantity'], "unit": row['unit']
         })
     return {"status": "success", "data": list(structured.values())}
+
+# 食譜匹配度
+@app.get("/api/recipes/match", summary="食譜匹配度：計算每道食譜能做幾%")
+def get_recipe_match():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        query = """
+            SELECT
+                r.id AS recipe_id,
+                r.name AS recipe_name,
+                COUNT(ri.ingredient_id) AS total_needed,
+                COUNT(fc.ingredient_id) AS have_count,
+                ROUND(
+                    COUNT(fc.ingredient_id) * 100.0 / COUNT(ri.ingredient_id), 1
+                ) AS match_percent
+            FROM pantry.recipes r
+            JOIN pantry.recipe_ingredients ri ON r.id = ri.recipe_id
+            LEFT JOIN (
+                SELECT DISTINCT ingredient_id FROM pantry.fridge_contents
+            ) fc ON ri.ingredient_id = fc.ingredient_id
+            GROUP BY r.id, r.name
+            ORDER BY match_percent DESC;
+        """
+        cur.execute(query)
+        results = cur.fetchall()
+        return {"status": "success", "data": results}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"匹配失敗: {e}")
+    finally:
+        cur.close()
+        conn.close()
 
 if __name__ == "__main__":
     import uvicorn

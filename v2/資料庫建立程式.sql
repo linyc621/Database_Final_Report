@@ -67,6 +67,11 @@ CREATE TABLE pantry.recipe_ingredients (
     REFERENCES pantry.ingredients(id)
     ON DELETE CASCADE
 );
+CREATE TABLE pantry.units (
+    id   INT GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(20) NOT NULL UNIQUE,  -- '顆', '克', '片'...
+    PRIMARY KEY (id)
+);
 
 --------------------------------------------------
 -- users
