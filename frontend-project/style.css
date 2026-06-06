@@ -1,0 +1,65 @@
+body { 
+    background-color: #F0F0F0;  
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", Arial, sans-serif;
+}
+h1.text-center {
+    margin-top: 20px;
+}
+/* 卡片懸浮與陰影動畫 */
+.card { 
+    margin-bottom: 20px; 
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+.pantry-card {
+    background-color: #FFFFDF;
+}
+.pantry-card table, .pantry-card th {
+    background-color: transparent;
+}
+/*新增食材*/
+.input-item {
+    background-color: #548C00;
+    color: #ffffff;            
+    font-weight: bold;                 
+}
+/*智慧食譜推薦*/
+.smart-recommend {
+    background-color: #FFED97; 
+    color: #272727;
+    font-weight: bold; 
+}
+/*冰箱內容清單*/
+.pantry-list {
+    background-color: #4F4F4F; 
+    color: #ffffff;
+    font-weight: bold;
+    letter-spacing: 1px;
+    display: flex;  
+    justify-content: space-between;                    
+    align-items: center;
+}
+/*食譜列表*/
+.recipe {
+    background-color: #FFDC35; 
+    color: #272727;
+    font-weight: bold; 
+}
+/*修改彈窗*/
+.modify {
+    background-color: #548C00;
+    color: #ffffff;
+    font-weight: bold; 
+}
+.badge-emergency { 
+    background-color: #FF7575; 
+}
+/*即期食材警告提示*/
+.text-emergency {
+    color: #dc3545 !important;
+    font-weight: bold;
+}
