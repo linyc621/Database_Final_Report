@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Pantry - 冰箱管家</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center mb-4">Smart Pantry - 冰箱管家</h1>
+    <div class="row main-grid">
+        <div class="col-md-4">
+            <section class="card">
+                <div class="card-header input-item">新增食材</div>
+                <div class="card-body">
+                    <form id="addForm">
+                        <div class="mb-2">
+                            <label class="form-label">食材名稱</label>
+                            <input type="text" id="ingName" class="form-control" required placeholder="例如: 雞蛋">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">分類</label>
+                            <input type="text" id="ingCategory" class="form-control" required placeholder="例如: 蛋奶類">
+                        </div>  
+                        <div class="mb-2">
+                            <label class="form-label">數量</label>
+                            <input type="number" id="qty" class="form-control" step="0.1" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">單位</label>
+                            <input type="text" id="unit" class="form-control" placeholder="個/克" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">過期日期</label>
+                            <input type="date" id="expDate" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-outline-success w-100">放入冰箱</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="card mt-4">
+                <div class="card-header smart-recommend">智慧食譜推薦</div>
+                <div class="card-body" id="smartRecommendList">
+                    <p class="text-muted">點擊下方按鈕獲取清庫存建議</p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-outline-dark btn-sm w-100" id="smartRecommendBtn">執行</button>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-md-8">
+            <section class="card pantry-card">
+                <div class="card-header pantry-list">
+                    目前冰箱清單
+                    <button class="btn btn-light btn-sm" id="refreshInventoryBtn">重新整理</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>食材</th>
+                                    <th>數量</th>
+                                    <th>過期日</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card mt-4">
+                <div class="card-header recipe">所有食譜</div>
+                <div class="card-body">
+                    <div id="allRecipeList" class="row"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modify">
+                <h5 class="modal-title">修改食材資訊</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editId">
+                <div class="mb-3">
+                    <label class="form-label">修改名稱</label>
+                    <input type="text" id="editName" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">修改分類</label>
+                    <input type="text" id="editCategory" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">修改數量</label>
+                    <input type="number" id="editQty" class="form-control" step="0.1" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">修改單位</label>
+                    <input type="text" id="editUnit" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">修改過期日</label>
+                    <input type="date" id="editExpDate" class="form-control" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="submitEditBtn">儲存修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
