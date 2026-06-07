@@ -18,6 +18,7 @@ CREATE DATABASE refrigerator;
 
 ![資料庫建立方法](資料庫建立方法.png)
 
+---
 
 ## 後端啟動方式
 
