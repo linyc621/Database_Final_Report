@@ -1,13 +1,24 @@
 from functools import wraps
 from fastapi import HTTPException
-
-from main import (
+import psycopg2
+from psycopg2.extras import RealDictCursor
+from dotenv import load_dotenv
+import os
+from models import (
     FridgeItemCreate,
     FridgeItemUpdate,
     RecipeCreate,
     RecipeUpdate,
-    get_db_connection,
 )
+
+load_dotenv()
+DB_URL = os.getenv("DB_URL")
+
+def get_db_connection():
+    try:
+        return psycopg2.connect(DB_URL, cursor_factory=RealDictCursor)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Database connection failed")
 
 def with_db_cursor(func):
     @wraps(func)
@@ -15,16 +26,13 @@ def with_db_cursor(func):
         conn = get_db_connection()
         cur = conn.cursor()
         try:
-            # 將cursor傳入實際要執行的函式中
             result = func(cur, *args, **kwargs)
             conn.commit()
             return result
         except HTTPException:
-            # 如果是HTTPException，代表是我們自己丟出的邏輯錯誤，直接rollback並原封不動丟出
             conn.rollback()
             raise
         except Exception as e:
-            # 捕捉其他未知的資料庫錯誤
             conn.rollback()
             raise HTTPException(status_code=400, detail=f"資料庫操作失敗: {e}")
         finally:
@@ -134,7 +142,6 @@ def get_all_recipes(cur):
                 "description": row['description'],
                 "ingredients": []
             }
-        # 確保有食材關聯才加入陣列 ，避免食譜沒有設定食材時出錯
         if row['ingredient_name']:
             structured[r_id]["ingredients"].append({
                 "item": row['ingredient_name'], 
@@ -144,17 +151,14 @@ def get_all_recipes(cur):
     return {"status": "success", "data": list(structured.values())}
 
 @with_db_cursor
-def create_recipe(cur, recipe: RecipeCreate): # 請確保有引入 RecipeCreate
-    # 1. 建立食譜主檔
+def create_recipe(cur, recipe: RecipeCreate):
     cur.execute(
         "INSERT INTO pantry.recipes (name, description) VALUES (%s, %s) RETURNING id;", 
         (recipe.name, recipe.description)
     )
     recipe_id = cur.fetchone()['id']
 
-    # 2. 處理食譜內的每一項食材
     for ing in recipe.ingredients:
-        # 尋找基礎食材表是否已有該食材
         cur.execute("SELECT id FROM pantry.ingredients WHERE name = %s;", (ing.name,))
         exist_ing = cur.fetchone()
         
@@ -167,13 +171,8 @@ def create_recipe(cur, recipe: RecipeCreate): # 請確保有引入 RecipeCreate
             )
             ing_id = cur.fetchone()['id']
         
-        # 寫入食譜與食材的關聯表
         cur.execute(
-            (
-                "INSERT INTO pantry.recipe_ingredients "
-                "(recipe_id, ingredient_id, quantity, unit) "
-                "VALUES (%s, %s, %s, %s);"
-            ),
+            "INSERT INTO pantry.recipe_ingredients (recipe_id, ingredient_id, quantity, unit) VALUES (%s, %s, %s, %s);",
             (recipe_id, ing_id, ing.quantity, ing.unit)
         )
             
@@ -185,7 +184,6 @@ def create_recipe(cur, recipe: RecipeCreate): # 請確保有引入 RecipeCreate
         
 @with_db_cursor
 def update_recipe(cur, recipe_id: int, recipe: RecipeUpdate):
-    # 1. 更新食譜主檔名稱與描述
     cur.execute(
         "UPDATE pantry.recipes SET name = %s, description = %s WHERE id = %s;",
         (recipe.name, recipe.description, recipe_id)
@@ -193,10 +191,8 @@ def update_recipe(cur, recipe_id: int, recipe: RecipeUpdate):
     if cur.rowcount == 0:
         raise HTTPException(status_code=404, detail="找不到此食譜")
 
-    # 2. 刪除原本關聯的所有食材 (清理舊資料)
     cur.execute("DELETE FROM pantry.recipe_ingredients WHERE recipe_id = %s;", (recipe_id,))
 
-    # 3. 重新寫入新的食材清單
     for ing in recipe.ingredients:
         cur.execute("SELECT id FROM pantry.ingredients WHERE name = %s;", (ing.name,))
         exist_ing = cur.fetchone()
@@ -211,8 +207,7 @@ def update_recipe(cur, recipe_id: int, recipe: RecipeUpdate):
             ing_id = cur.fetchone()['id']
             
         cur.execute(
-            """INSERT INTO pantry.recipe_ingredients (recipe_id, ingredient_id, quantity, unit) 
-               VALUES (%s, %s, %s, %s);""",
+            "INSERT INTO pantry.recipe_ingredients (recipe_id, ingredient_id, quantity, unit) VALUES (%s, %s, %s, %s);",
             (recipe_id, ing_id, ing.quantity, ing.unit)
         )
             
@@ -223,10 +218,7 @@ def update_recipe(cur, recipe_id: int, recipe: RecipeUpdate):
 
 @with_db_cursor
 def delete_recipe(cur, recipe_id: int):
-    # 為了避免 Foreign Key 約束出錯，先刪除關聯表裡的紀錄
     cur.execute("DELETE FROM pantry.recipe_ingredients WHERE recipe_id = %s;", (recipe_id,))
-    
-    # 再刪除食譜主表
     cur.execute("DELETE FROM pantry.recipes WHERE id = %s;", (recipe_id,))
     
     if cur.rowcount == 0:

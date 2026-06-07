@@ -5,7 +5,18 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import date
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+from models import (
+    FridgeItemCreate,
+    FridgeItemUpdate,
+    RecipeCreate,
+    RecipeUpdate,
+)
 import db
+
+load_dotenv()
+DB_URL = os.getenv("DB_URL")
 
 app = FastAPI(title="Smart Pantry API", description="冰箱管家後端 API")
 app.add_middleware(
@@ -14,12 +25,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# 1. 資料庫連線設定
-from dotenv import load_dotenv
-import os
-load_dotenv()
-DB_URL = os.getenv("DB_URL")
 
 def get_db_connection():
     try:
@@ -30,37 +35,6 @@ def get_db_connection():
             status_code=500,
             detail="Database connection failed",
         )
-
-# 2. 定義資料格式
-class FridgeItemCreate(BaseModel):
-    name: str
-    category: str
-    quantity: float
-    unit: str
-    expire_date: date
-
-class FridgeItemUpdate(BaseModel):
-    name: str
-    category: str
-    quantity: float
-    unit: str
-    expire_date: date
-
-class RecipeIngredient(BaseModel):
-    name: str
-    category: Optional[str] = "未分類"  
-    quantity: float
-    unit: str
-
-class RecipeCreate(BaseModel):
-    name: str
-    description: Optional[str] = ""
-    ingredients: List[RecipeIngredient]
-
-class RecipeUpdate(BaseModel):
-    name: str
-    description: Optional[str] = ""
-    ingredients: List[RecipeIngredient]
 
 # 3. API 接口區域
 
