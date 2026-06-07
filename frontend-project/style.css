@@ -1,6 +1,6 @@
 body { 
     background-color: #F0F0F0;  
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", Arial, sans-serif;
+    font-family: "Noto Sans TC", sans-serif;
 }
 h1.text-center {
     margin-top: 20px;
@@ -48,6 +48,9 @@ h1.text-center {
     background-color: #FFDC35; 
     color: #272727;
     font-weight: bold; 
+    display: flex;  
+    justify-content: space-between;                    
+    align-items: center;
 }
 /*修改彈窗*/
 .modify {
