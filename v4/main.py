@@ -16,7 +16,7 @@ app.add_middleware(
 )
 
 # 1. 資料庫連線設定
-DB_URL = "postgresql://postgres:0000@localhost:5432/project"
+DB_URL = "postgresql://postgres:0000@localhost:5432/refrigerator"
 def get_db_connection():
     try:
         return psycopg2.connect(DB_URL, cursor_factory=RealDictCursor)
