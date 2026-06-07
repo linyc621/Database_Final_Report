@@ -47,7 +47,7 @@
                     <p class="text-muted">點擊下方按鈕獲取清庫存建議</p>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-outline-dark btn-sm w-100" id="smartRecommendBtn">執行</button>
+                    <button class="btn btn-outline-dark btn-sm w-100" id="smartRecommendBtn">執行推薦</button>
                 </div>
             </section>
         </div>
@@ -55,7 +55,7 @@
         <div class="col-md-8">
             <section class="card pantry-card">
                 <div class="card-header pantry-list">
-                    目前冰箱清單
+                    <span>目前冰箱清單</span>
                     <button class="btn btn-light btn-sm" id="refreshInventoryBtn">重新整理</button>
                 </div>
                 <div class="card-body">
@@ -76,7 +76,10 @@
             </section>
 
             <section class="card mt-4">
-                <div class="card-header recipe">所有食譜</div>
+                <div class="card-header recipe">
+                    <span>所有食譜</span>
+                    <button class="btn btn-sm btn-light" onclick="openRecipeModal(null)">+ 新增食譜</button>
+                </div>
                 <div class="card-body">
                     <div id="allRecipeList" class="row"></div>
                 </div>
@@ -117,7 +120,42 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="submitEditBtn">儲存修改</button>
+                <button type="button" class="btn btn-success" id="submitEditBtn">儲存修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="recipeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="recipeModalTitle">新增食譜</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="recipeId">
+                <div class="mb-3">
+                    <label class="form-label">食譜名稱</label>
+                    <input type="text" id="recipeName" class="form-control" required placeholder="例如: 番茄炒蛋">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">食譜描述 (選填)</label>
+                    <textarea id="recipeDesc" class="form-control" rows="2" placeholder="簡短說明作法..."></textarea>
+                </div>
+                
+                <hr>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label fw-bold mb-0">所需食材清單</label>
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addRecipeIngredientRow()">+ 增加食材</button>
+                </div>
+                
+                <div id="recipeIngredientsContainer"></div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" onclick="submitRecipe()">儲存食譜</button>
             </div>
         </div>
     </div>
