@@ -12,11 +12,17 @@ from models import (
 )
 
 load_dotenv()
-DB_URL = os.getenv("DB_URL")
 
 def get_db_connection():
     try:
-        return psycopg2.connect(DB_URL, cursor_factory=RealDictCursor)
+        return psycopg2.connect(
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT"),
+            dbname=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            cursor_factory=RealDictCursor
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail="Database connection failed")
 
