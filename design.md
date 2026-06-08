@@ -120,7 +120,7 @@
 *   端點: `GET /api/recipes/recommend`
 *   參數: N/A
 *   狀態碼: `200 OK`
-*   回應: Object
+*   回應: `Object`
     * 回應欄位
       * status: str
       * data: Array
@@ -241,7 +241,7 @@
 *   端點: `GET /api/recipes/smart-recommend`
 *   參數: N/A
 *   狀態碼: `200 OK`
-*   回應: Object
+*   回應: `Object`
     * 回應欄位
       * status: str
       * algorithm: str
