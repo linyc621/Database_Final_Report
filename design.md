@@ -1,365 +1,394 @@
-# Smart Pantry API Design
+# API 設計
 
-## Inventory Management
+# Smart Pantry API
 
-### Get All Ingredients
-
-取得冰箱所有食材。
-
-**Endpoint**
-
-```
-GET /api/inventory
-```
-
-**Parameters**
-
-N/A
-
-**Response**
-
-Status Code: `200 OK`
-
-```json
-{
-  "status": "success",
-  "data": [
-    {
-      "id": 1,
-      "name": "高麗菜",
-      "category": "蔬菜",
-      "quantity": 0.5,
-      "unit": "顆",
-      "expire_date": "2026-06-15"
-    }
-  ]
-}
-```
+冰箱管家後端 API
 
 ---
 
-### Add Ingredient
+# 冰箱食材管理
 
-新增食材到冰箱。
+## 1. 取得冰箱所有食材
 
-**Endpoint**
+端點: `GET /api/inventory`
 
-```
-POST /api/inventory
-```
+參數: N/A
 
-**Request Body**
+狀態碼: `200 OK`
 
-| Field       | Type                | Required |
-| ----------- | ------------------- | -------- |
-| name        | string              | Yes      |
-| category    | string              | Yes      |
-| quantity    | float               | Yes      |
-| unit        | string              | Yes      |
-| expire_date | string (yyyy-mm-dd) | Yes      |
+回應: Object
 
-**Response**
+回應欄位
 
-Status Code: `200 OK`
+status: str
 
-```json
-{
-  "status": "success",
-  "message": "食材 '高麗菜' 已存入冰箱",
-  "db_id": 1
-}
-```
+data: Array
 
----
+id: int
 
-### Update Ingredient
+name: str
 
-修改冰箱中的食材資訊。
+category: str
 
-**Endpoint**
+quantity: float
 
-```
-PUT /api/inventory/{item_id}
-```
+unit: str
 
-**Path Parameters**
+expire_date: str (yyyy-mm-dd)
 
-| Field   | Type |
-| ------- | ---- |
-| item_id | int  |
-
-**Request Body**
-
-| Field       | Type   | Required |
-| ----------- | ------ | -------- |
-| name        | string | Yes      |
-| category    | string | Yes      |
-| quantity    | float  | Yes      |
-| unit        | string | Yes      |
-| expire_date | string | Yes      |
-
-**Response**
-
-Status Code: `200 OK`
+回應範例
 
 ```json
 {
-  "status": "success",
-  "message": "食材修改成功！名稱已更新為 '高麗菜'"
-}
-```
-
-**Error Response**
-
-Status Code: `404 Not Found`
-
-```json
-{
-  "detail": "找不到這筆食材"
-}
-```
-
----
-
-### Delete Ingredient
-
-刪除冰箱食材。
-
-**Endpoint**
-
-```
-DELETE /api/inventory/{item_id}
-```
-
-**Path Parameters**
-
-| Field   | Type |
-| ------- | ---- |
-| item_id | int  |
-
-**Response**
-
-Status Code: `200 OK`
-
-```json
-{
-  "status": "success",
-  "message": "食材 ID 1 已經刪除"
-}
-```
-
-**Error Response**
-
-Status Code: `404 Not Found`
-
-```json
-{
-  "detail": "找不到這筆食材"
-}
-```
-
----
-
-# Recipe Management
-
-### Get Recipe List
-
-取得所有食譜。
-
-**Endpoint**
-
-```
-GET /api/recipes/recommend
-```
-
-**Parameters**
-
-N/A
-
-**Response**
-
-Status Code: `200 OK`
-
-```json
-{
-  "status": "success",
-  "data": [
-    {
-      "id": 1,
-      "name": "番茄炒蛋",
-      "description": "經典清冰箱家常菜",
-      "ingredients": [
+    "status": "success",
+    "data": [
         {
-          "item": "番茄",
-          "qty": 2.0,
-          "unit": "顆"
-        },
-        {
-          "item": "雞蛋",
-          "qty": 3.0,
-          "unit": "顆"
+            "id": 1,
+            "name": "高麗菜",
+            "category": "蔬菜",
+            "quantity": 0.5,
+            "unit": "顆",
+            "expire_date": "2026-06-15"
         }
-      ]
-    }
-  ]
+    ]
+}
+```
+
+## 2. 新增食材到冰箱
+
+端點: `POST /api/inventory`
+
+參數:
+
+name: str (必填)
+
+category: str (必填)
+
+quantity: float (必填)
+
+unit: str (必填)
+
+expire_date: str (yyyy-mm-dd) (必填)
+
+狀態碼: `200 OK`
+
+回應: Object
+
+回應欄位
+
+status: str
+
+message: str
+
+db_id: int
+
+回應範例
+
+```json
+{
+    "status": "success",
+    "message": "食材 '高麗菜' 已存入冰箱",
+    "db_id": 1
+}
+```
+
+## 3. 修改冰箱裡的食材
+
+端點: `PUT /api/inventory/{item_id}`
+
+參數:
+
+item_id: int (Path，必填)
+
+name: str (必填)
+
+category: str (必填)
+
+quantity: float (必填)
+
+unit: str (必填)
+
+expire_date: str (yyyy-mm-dd) (必填)
+
+狀態碼: `200 OK`
+
+回應: Object
+
+回應欄位
+
+status: str
+
+message: str
+
+回應範例
+
+```json
+{
+    "status": "success",
+    "message": "食材修改成功！名稱已更新為 '高麗菜'"
+}
+```
+
+找不到時回傳 404
+
+```json
+{
+    "detail": "找不到這筆食材"
+}
+```
+
+## 4. 從冰箱刪除食材
+
+端點: `DELETE /api/inventory/{item_id}`
+
+參數:
+
+item_id: int (Path，必填)
+
+狀態碼: `200 OK`
+
+回應: Object
+
+回應欄位
+
+status: str
+
+message: str
+
+回應範例
+
+```json
+{
+    "status": "success",
+    "message": "食材 ID 1 已經刪除"
+}
+```
+
+找不到時回傳 404
+
+```json
+{
+    "detail": "找不到這筆食材"
 }
 ```
 
 ---
 
-### Add Recipe
+# 冰箱食譜管理
 
-新增食譜。
+## 1. 取得所有食譜清單
 
-**Endpoint**
+端點: `GET /api/recipes/recommend`
 
-```
-POST /api/recipes
-```
+參數: N/A
 
-**Request Body**
+狀態碼: `200 OK`
 
-| Field       | Type   | Required |
-| ----------- | ------ | -------- |
-| name        | string | Yes      |
-| description | string | No       |
-| ingredients | array  | Yes      |
+回應: Object
 
-Ingredient Object
+回應欄位
 
-| Field    | Type   |
-| -------- | ------ |
-| name     | string |
-| category | string |
-| quantity | float  |
-| unit     | string |
+status: str
 
-**Response**
+data: Array
 
-Status Code: `200 OK`
+id: int
+
+name: str
+
+description: str
+
+ingredients: Array
+
+item: str
+
+qty: float
+
+unit: str
+
+回應範例
 
 ```json
 {
-  "status": "success",
-  "message": "食譜 '番茄炒蛋' 新增成功！",
-  "recipe_id": 1
+    "status": "success",
+    "data": [
+        {
+            "id": 1,
+            "name": "番茄炒蛋",
+            "description": "經典清冰箱家常菜",
+            "ingredients": [
+                {
+                    "item": "番茄",
+                    "qty": 2.0,
+                    "unit": "顆"
+                },
+                {
+                    "item": "雞蛋",
+                    "qty": 3.0,
+                    "unit": "顆"
+                }
+            ]
+        }
+    ]
 }
 ```
 
----
+## 2. 新增食譜
 
-### Update Recipe
+端點: `POST /api/recipes`
 
-修改食譜。
+參數:
 
-**Endpoint**
+name: str (必填)
 
-```
-PUT /api/recipes/{recipe_id}
-```
+description: str (選填，預設為 "")
 
-**Path Parameters**
+ingredients: Array (必填)
 
-| Field     | Type |
-| --------- | ---- |
-| recipe_id | int  |
+ingredients 物件欄位
 
-**Request Body**
+name: str (必填)
 
-| Field       | Type   |
-| ----------- | ------ |
-| name        | string |
-| description | string |
-| ingredients | array  |
+category: str (選填，預設為 "未分類")
 
-**Response**
+quantity: float (必填)
 
-Status Code: `200 OK`
+unit: str (必填)
+
+狀態碼: `200 OK`
+
+回應: Object
+
+回應欄位
+
+status: str
+
+message: str
+
+recipe_id: int
+
+回應範例
 
 ```json
 {
-  "status": "success",
-  "message": "食譜 '番茄炒蛋' 修改成功！"
+    "status": "success",
+    "message": "食譜 '番茄炒蛋' 新增成功！",
+    "recipe_id": 1
 }
 ```
 
-**Error Response**
+## 3. 修改食譜
 
-Status Code: `404 Not Found`
+端點: `PUT /api/recipes/{recipe_id}`
+
+參數:
+
+recipe_id: int (Path，必填)
+
+name: str (必填)
+
+description: str (選填，預設為 "")
+
+ingredients: Array (必填)
+
+狀態碼: `200 OK`
+
+回應: Object
+
+回應欄位
+
+status: str
+
+message: str
+
+回應範例
 
 ```json
 {
-  "detail": "找不到此食譜"
+    "status": "success",
+    "message": "食譜 '番茄炒蛋' 修改成功！"
 }
 ```
 
----
-
-### Delete Recipe
-
-刪除食譜。
-
-**Endpoint**
-
-```
-DELETE /api/recipes/{recipe_id}
-```
-
-**Response**
-
-Status Code: `200 OK`
+找不到時回傳 404
 
 ```json
 {
-  "status": "success",
-  "message": "食譜已刪除！"
+    "detail": "找不到此食譜"
 }
 ```
 
-**Error Response**
+## 4. 刪除食譜
 
-Status Code: `404 Not Found`
+端點: `DELETE /api/recipes/{recipe_id}`
+
+參數:
+
+recipe_id: int (Path，必填)
+
+狀態碼: `200 OK`
+
+回應: Object
+
+回應欄位
+
+status: str
+
+message: str
+
+回應範例
 
 ```json
 {
-  "detail": "找不到此食譜"
+    "status": "success",
+    "message": "食譜已刪除！"
 }
 ```
 
----
-
-# Smart Recommendation
-
-### Recommend Recipes by Expiring Ingredients
-
-優先推薦能消耗即將過期食材的食譜。
-
-**Endpoint**
-
-```
-GET /api/recipes/smart-recommend
-```
-
-**Parameters**
-
-N/A
-
-系統自動尋找 3 天內到期的食材，並使用 Greedy (Expiring First) 演算法排序推薦。
-
-**Response**
-
-Status Code: `200 OK`
+找不到時回傳 404
 
 ```json
 {
-  "status": "success",
-  "algorithm": "Greedy (Expiring First)",
-  "data": [
-    {
-      "recipe_name": "番茄炒蛋",
-      "description": "經典清冰箱家常菜",
-      "emergency_count": 2
-    }
-  ]
+    "detail": "找不到此食譜"
+}
+```
+
+## 5. 智慧推薦食譜
+
+端點: `GET /api/recipes/smart-recommend`
+
+參數: N/A
+
+狀態碼: `200 OK`
+
+回應: Object
+
+回應欄位
+
+status: str
+
+algorithm: str
+
+data: Array
+
+recipe_name: str
+
+description: str
+
+emergency_count: int
+
+回應範例
+
+```json
+{
+    "status": "success",
+    "algorithm": "Greedy (Expiring First)",
+    "data": [
+        {
+            "recipe_name": "番茄炒蛋",
+            "description": "經典清冰箱家常菜",
+            "emergency_count": 2
+        }
+    ]
 }
 ```
