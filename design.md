@@ -3,10 +3,11 @@
 ## 冰箱食材管理
 
 ### 1. 取得冰箱所有食材
+
 *   端點: `GET /api/inventory`
 *   參數: N/A
 *   狀態碼: `200 OK`
-*   回應: Object
+*   回應: `Object`
     * 回應欄位
       * status: str
       * data: Array
@@ -33,80 +34,52 @@
       }
       ```
 
-## 2. 新增食材到冰箱
+### 2. 新增食材到冰箱
 
-端點: `POST /api/inventory`
+*   端點: `POST /api/inventory`
+*   參數:
+    * name: str (必填)
+    * category: str (必填)
+    * quantity: float (必填)
+    * unit: str (必填)
+    * expire_date: str (yyyy-mm-dd) (必填)
+*   狀態碼: `200 OK`
+*   回應: `Object`
+    * 回應欄位
+      * status: str
+      * message: str
+      * db_id: int
+    * 回應範例
+      ```json
+      {
+          "status": "success",
+          "message": "食材 '高麗菜' 已存入冰箱",
+          "db_id": 1
+      }
+      ```
 
-參數:
+### 3. 修改冰箱裡的食材
 
-name: str (必填)
-
-category: str (必填)
-
-quantity: float (必填)
-
-unit: str (必填)
-
-expire_date: str (yyyy-mm-dd) (必填)
-
-狀態碼: `200 OK`
-
-回應: Object
-
-回應欄位
-
-status: str
-
-message: str
-
-db_id: int
-
-回應範例
-
-```json
-{
-    "status": "success",
-    "message": "食材 '高麗菜' 已存入冰箱",
-    "db_id": 1
-}
-```
-
-## 3. 修改冰箱裡的食材
-
-端點: `PUT /api/inventory/{item_id}`
-
-參數:
-
-item_id: int (Path，必填)
-
-name: str (必填)
-
-category: str (必填)
-
-quantity: float (必填)
-
-unit: str (必填)
-
-expire_date: str (yyyy-mm-dd) (必填)
-
-狀態碼: `200 OK`
-
-回應: Object
-
-回應欄位
-
-status: str
-
-message: str
-
-回應範例
-
-```json
-{
-    "status": "success",
-    "message": "食材修改成功！名稱已更新為 '高麗菜'"
-}
-```
+*   端點: `PUT /api/inventory/{item_id}`
+*   參數:
+    * item_id: int (Path，必填)
+    * name: str (必填)
+    * category: str (必填)
+    * quantity: float (必填)
+    * unit: str (必填)
+    * expire_date: str (yyyy-mm-dd) (必填)
+*   狀態碼: `200 OK`
+*   回應: Object
+    * 回應欄位
+      * status: str
+      * message: str
+    * 回應範例
+      ```json
+      {
+          "status": "success",
+          "message": "食材修改成功！名稱已更新為 '高麗菜'"
+      }
+      ```
 
 找不到時回傳 404
 
