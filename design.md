@@ -1,16 +1,9 @@
-# API 設計
+## API 設計
 
-# Smart Pantry API
+## 冰箱食材管理
 
-冰箱管家後端 API
-
----
-
-# 冰箱食材管理
-
-## 1. 取得冰箱所有食材
-
-端點: `GET /api/inventory`
+### 1. 取得冰箱所有食材
+ *端點: `GET /api/inventory`
 
 參數: N/A
 
