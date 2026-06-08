@@ -17,21 +17,21 @@
       * unit: str
       * expire_date: str (yyyy-mm-dd)
     * 回應範例
-```json
-{
-    "status": "success",
-    "data": [
-        {
-            "id": 1,
-            "name": "高麗菜",
-            "category": "蔬菜",
-            "quantity": 0.5,
-            "unit": "顆",
-            "expire_date": "2026-06-15"
-        }
-    ]
-}
-```
+      ```json
+      {
+          "status": "success",
+          "data": [
+              {
+                  "id": 1,
+                  "name": "高麗菜",
+                  "category": "蔬菜",
+                  "quantity": 0.5,
+                  "unit": "顆",
+                  "expire_date": "2026-06-15"
+              }
+          ]
+      }
+      ```
 
 ## 2. 新增食材到冰箱
 
