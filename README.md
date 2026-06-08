@@ -70,3 +70,28 @@ uvicorn main:app --reload
 
 - `.env` 檔案含有資料庫密碼，**不會上傳至 GitHub**，請自行依照 `.env.example` 建立
 - 前後端都啟動後才能正常使用所有功能
+
+---
+
+## 專案結構
+
+```text
+Database_Final_Report/
+│
+├── backend-project/                # 後端專案
+│   ├── main.py                     # FastAPI 主程式
+│   ├── db.py                       # 資料庫操作
+│   ├── models.py                   # Pydantic 模型
+│   ├── requirements.txt            # 套件需求
+│   └── .env                        # 環境變數
+│
+├── frontend-project/               # 前端專案
+│   ├── css/
+│   │   └── style.css               # 網頁樣式
+│   ├── js/
+│   │   └── app.js                  # API 串接邏輯
+│   └── index.html                  # 主頁面
+│
+├── design.md                       # API 設計文件
+└── README.md                       # 專案說明
+```
