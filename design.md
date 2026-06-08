@@ -7,21 +7,15 @@
 *   參數: N/A
 *   狀態碼: `200 OK`
 *   回應: Object
-*       回應欄位
-*           status: str
-*           data: Array
-
-id: int
-
-name: str
-
-category: str
-
-quantity: float
-
-unit: str
-
-expire_date: str (yyyy-mm-dd)
+    *    回應欄位
+        *    status: str
+        *    data: Array
+        *    id: int
+        *    name: str
+        *    category: str
+        *    quantity: float
+        *    unit: str
+        *    expire_date: str (yyyy-mm-dd)
 
 回應範例
 
