@@ -5,17 +5,29 @@
 ### 1. 取得冰箱所有食材
 
 端點: GET /api/inventory
+
 參數: N/A
+
 狀態碼: 200 OK
+
 回應: Object
+
 Object 物件欄位status: str
+
 data: Array<FridgeItem>
+
 id: int
+
 name: str
+
 category: str
+
 quantity: float
+
 unit: str
+
 expire_date: str (yyyy-mm-dd)
+
 回應範例[
     {
         "id": 1,
