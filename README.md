@@ -86,10 +86,8 @@ Database_Final_Report/
 │   └── .env                        # 環境變數
 │
 ├── frontend-project/               # 前端專案
-│   ├── css/
-│   │   └── style.css               # 網頁樣式
-│   ├── js/
-│   │   └── app.js                  # API 串接邏輯
+│   ├── style.css                   # 網頁樣式    
+│   ├── app.js                      # API 串接邏輯
 │   └── index.html                  # 主頁面
 │
 ├── design.md                       # API 設計文件
