@@ -3,19 +3,13 @@
 ## 冰箱食材管理
 
 ### 1. 取得冰箱所有食材
- *端點: `GET /api/inventory`
-
-參數: N/A
-
-狀態碼: `200 OK`
-
-回應: Object
-
-回應欄位
-
-status: str
-
-data: Array
+*   端點: `GET /api/inventory`
+*   參數: N/A
+*   狀態碼: `200 OK`
+*   回應: Object
+*       回應欄位
+*           status: str
+*           data: Array
 
 id: int
 
