@@ -8,8 +8,8 @@
 *   狀態碼: `200 OK`
 *   回應: Object
     *    回應欄位
-       *   status: str
-       *   data: Array
+        *   status: str
+        *   data: Array
 id: int
 name: str
 category: str
